@@ -1,0 +1,96 @@
+{
+  "name": "pos-lounge-bar",
+  "private": true,
+  "version": "1.0.0",
+  "description": "POS System for Lounge Bar",
+  "author": "POS Team",
+  "type": "commonjs",
+  "main": "dist-electron/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "tsc -p tsconfig.electron.json && concurrently \"vite\" \"wait-on http://localhost:5173 && node scripts/run-electron.cjs . --pos-dev\"",
+    "build": "vite build && tsc -p tsconfig.electron.json && electron-builder",
+    "build:web": "vite build",
+    "build:server": "tsc -p tsconfig.electron.json",
+    "start:server": "npm run build:server && node dist-electron/server.js",
+    "server:setup": "node scripts/setup-server.cjs",
+    "build:android:web": "vite build --mode android --outDir dist-android",
+    "android:sync": "npm run build:android:web && node scripts/sync-android.cjs",
+    "android:apk": "npm run android:sync && node scripts/build-android.cjs",
+    "test:api": "npm run build:server && node scripts/test-api.cjs",
+    "test:android": "npm run build:server && node scripts/smoke-android.cjs",
+    "preview": "vite preview",
+    "start:electron": "npm run build:web && tsc -p tsconfig.electron.json && node scripts/run-electron.cjs .",
+    "build:exe": "npm run build",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.electron.json",
+    "lint": "eslint src electron vite.config.ts",
+    "db:check": "node scripts/check-postgres.cjs",
+    "db:seed-demo": "node scripts/seed-demo.cjs",
+    "test:postgres": "tsc -p tsconfig.electron.json && node scripts/test-postgres.cjs",
+    "test:drafts": "node scripts/test-drafts.cjs",
+    "test:electron": "npm run build:web && tsc -p tsconfig.electron.json && node scripts/run-electron.cjs scripts/smoke-electron.cjs --smoke-test",
+    "db:restore": "tsc -p tsconfig.electron.json && node scripts/restore-postgres.cjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "dotenv": "^18.0.9",
+    "lucide-react": "^0.344.0",
+    "pg": "^8.23.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
+    "@eslint/js": "^9.9.1",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.18",
+    "concurrently": "^8.2.2",
+    "electron": "^42.1.0",
+    "electron-builder": "^26.8.1",
+    "eslint": "^9.9.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "react-test-renderer": "^18.3.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^7.3.3",
+    "wait-on": "^7.0.1"
+  },
+  "build": {
+    "appId": "com.posloungebar.app",
+    "productName": "POS Lounge Bar",
+    "directories": {
+      "buildResources": "assets",
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

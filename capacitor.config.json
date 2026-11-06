@@ -1,0 +1,7 @@
+{
+ "appId":"com.posloungebar.cashier",
+ "appName":"POS Caisse",
+ "webDir":"dist-android",
+ "server":{"androidScheme":"https"},
+ "android":{"allowMixedContent":false}
+}
